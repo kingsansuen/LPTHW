@@ -1,9 +1,7 @@
 from sys import exit
 import time
-import ex45_b
 import random
 from random import randint
-from threading import Thread
 import threading
 
 
@@ -25,11 +23,8 @@ class mainroom(object):
             elif playerchoice == 2:
                 play2.playerturn()
             elif playerchoice == 3:
-                ex45_b.count.timer()
-                t1 = Thread(target=ex45_b.count.timelimit)
-                t2 = Thread(target=ex45_b.engine.generate)
-                t1.start()
-                t2.start()
+                starteverything(True)
+
         else:
             print "Wrong Input!"
             return game.intro()
@@ -63,11 +58,7 @@ class exroom(object):
             print "Good luck!"
             print "Press enter when ready."
             raw_input(">")
-            ex45_b.count.timer()
-            t1 = Thread(target=ex45_b.count.timelimit)
-            t2 = Thread(target=ex45_b.engine.generate)
-            t1.start()
-            t2.start()
+            starteverything(True)
 
 
 
@@ -197,9 +188,191 @@ class try_to_guess(engin_num):
             print "You lose"
             exit(0)
 
+class monster(object):
+    pass
+
+def starteverything(ok):
+    if __name__ == "__main__":
+        if ok == True:
+            t.begin()
+            t.start()
+            engine.generate(True)
+        elif ok == False:
+            t.stop()
+            exit(0)
 
 
 
+
+class small(monster):
+    def renew(self):
+        a_color = ["red", "blue", "yellow", "green"]
+        self.color = a_color[random.randint(0,len(a_color)-1)]
+        self.height = random.randint(1,100)
+        self.weight = random.randint(50,100)
+        print_small_monster.describtion()
+
+    def describtion(self):
+
+        monster_de = ["This is a monster which is %d height" % self.height, "This is a monster which is %d heavy" % self.weight, "This is a %s monster." % self.color]
+
+
+
+        a = monster_de[random.randint(0,len(monster_de)-1)]
+        b = monster_de[random.randint(0,len(monster_de)-1)]
+        while b == a:
+            b = monster_de[random.randint(0,len(monster_de)-1)]
+        c = monster_de[random.randint(0,len(monster_de)-1)]
+        while c == a or c == b:
+            c = monster_de[random.randint(0,len(monster_de)-1)]
+
+        print a
+        print b
+        print c
+
+
+
+
+class big(monster):
+    def renew(self):
+        a_color = ["red", "blue", "yellow"]
+        self.color = a_color[random.randint(0,len(a_color)-1)]
+        self.height = random.randint(1,100)
+        self.weight = random.randint(1,49)
+        print_big_monster.describtion()
+
+    def describtion(self):
+        monster_de = ["This is a monster which is %d height" % self.height, "This is a monster which is %d heavy" % self.weight, "This is a %s monster." % self.color]
+
+
+
+        a = monster_de[random.randint(0,len(monster_de)-1)]
+        b = monster_de[random.randint(0,len(monster_de)-1)]
+        while b == a:
+            b = monster_de[random.randint(0,len(monster_de)-1)]
+        c = monster_de[random.randint(0,len(monster_de)-1)]
+        while c == a or c == b:
+            c = monster_de[random.randint(0,len(monster_de)-1)]
+
+        print a
+        print b
+        print c
+
+
+class engine(object):
+    def __init__ (self, score):
+        self.score = score
+
+    def generate(self, a):
+            while a == True:
+                b_or_small=random.randint(0,1)
+                if b_or_small == 0 :
+                    print_big_monster.renew()
+                    player_input = raw_input(">")
+                    z = t.isAlive()
+                    if z == True:
+                        if player_input == "kill":
+                            player.dead()
+                            starteverything(False)
+                        elif player_input == "catch":
+                            player.catch()
+                            self.score += 100
+                            print "Your score: %d" % self.score
+                            engine.generate(True)
+                        else:
+                            print "Wrong Input!"
+                            engine.generate(True)
+
+                    else:
+                        exit(0)
+
+
+
+                elif b_or_small == 1 :
+                    print_small_monster.renew()
+                    player_input2 = raw_input(">")
+                    z = t.isAlive()
+                    if z == True:
+                        if player_input2 == "kill":
+                            player.kill()
+                            self.score += 100
+                            print "Your score: %d" % self.score
+                            engine.generate(True)
+                        elif player_input2 == "catch":
+                            player.dead()
+                            starteverything(False)
+                        else:
+                            print "Wrong Input!"
+                            engine.generate(True)
+
+                    else:
+                        exit(0)
+
+
+
+
+
+
+
+class Timer(object):
+    def timer(self):
+        print "Ready"
+        time.sleep(1)
+        print "3"
+        time.sleep(1)
+        print "2"
+        time.sleep(1)
+        print "1"
+        return
+
+class Thread(threading.Thread):
+    def begin(self):
+        self.stopme = True
+
+    def run(self):
+        while self.stopme == True:
+            print"Start"
+            i = 0
+            while i < 60:
+                time.sleep(1)
+                i+=1
+            if i == 60:
+                print "\nTimes up!"
+                print "Stop typing!"
+                print "Press any button to exit!"
+                starteverything(False)
+
+
+
+
+            ## Error may raise here, because one thread is still ruuning in the background
+    def stop(self):
+        self.stopme = False
+
+
+
+
+
+
+class player(object):
+    def dead(self):
+        print "Wrong choice!"
+        print "You are dead..."
+    def kill(self):
+        print "You have killed a monster"
+    def catch (self):
+        print "You have caught a monster"
+
+
+
+
+player = player()
+print_small_monster = small()
+print_big_monster = big()
+engine = engine(0)
+count = Timer()
+t = Thread()
+t.setDaemon(True)
 Begin_choice = None
 game = mainroom()
 play1 = try_to_guess()
