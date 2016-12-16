@@ -1,0 +1,67 @@
+<style>
+p.shine
+{
+  font-size: 1em;
+  margin: 0 auto;
+  width: 200px;
+}
+
+.shine
+{
+
+  background: #222 -webkit-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff)) 0 0 no-repeat;
+  -webkit-background-size: 125px;
+
+  color: rgba(255, 255, 255, 0.1);
+  -webkit-background-clip: text;
+
+  -webkit-animation-name: shine;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes shine
+{
+  0%
+  {
+      background-position: top left;
+  }
+  100%
+  {
+      background-position: top right;
+  }
+}
+</style>
+
+{% extends "layout.html" %}
+{% block content %}
+{% if scene %}
+  <h1 align="center"><b> {{ scene.title }} </b></h1>
+  <pre align="center">{{ scene.description }}</pre>
+{% if scene.urlname == "death" or scene.urlname == "shoot_death" or scene.urlname == "the_end_winner" or scene.urlname == "the_end_loser" or scene.urlname == "dodge_death" or scene.urlname == "code_death" or scene.urlname == "bomb_death"%}
+  <p align="center"><a href="/">Play Again?</a></p>
+{% if scene.urlname != "the_end_winner" %}
+  <p align="center">
+    <audio controls="controls" autoplay="autoplay" src="/static/music/Gameover.mp3">
+    </audio>
+  </p>
+{% else %}
+<p align="center">
+<audio controls="controls" autoplay="autoplay" src="/static/music/Youwin.mp3">
+</audio>
+</p>
+{% endif %}
+{% else %}
+  <p align="center">
+    <form align="center" action="/game" method="POST">
+  What do you do? <input type="text"  name="userinput"> <input type="SUBMIT">
+  </form>
+  </p>
+  {% if scene.urlname == "laser_weapon_armory" %}
+    <p class="shine" style="position:absolute; bottom:0px;">Pw:{{ password }}</p>
+    {% endif %}
+  {% endif %}
+{% else %}
+<p align="center"><a href="/">Start at the Beginning</a></p>
+{% endif %}
+{% endblock %}
